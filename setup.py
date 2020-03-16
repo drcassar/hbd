@@ -8,9 +8,6 @@ setuptools.setup(
     description='HBD',
     url="https://github.com/drcassar/hbd",
     packages=setuptools.find_packages(),
-    install_requires=[
-        'numpy>=1.1', 'scipy>=0.19', 'pandas>=0.24.0', 'lmfit>=0.9.13', 'deap',
-        'tensorflow'
-    ],
+    install_requires=['numpy>=1.1', 'pandas>=0.24.0', 'deap', 'tensorflow'],
     python_requires='>=3.6',
 )
