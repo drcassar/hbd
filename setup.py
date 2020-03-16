@@ -5,7 +5,7 @@ setuptools.setup(
     version='1.6',
     author='Daniel Roberto Cassar',
     author_email='daniel.r.cassar@gmail.com',
-    description='HBD',
+    description='hbd',
     url="https://github.com/drcassar/hbd",
     packages=setuptools.find_packages(),
     install_requires=['numpy>=1.1', 'pandas>=0.24.0', 'deap', 'tensorflow'],
