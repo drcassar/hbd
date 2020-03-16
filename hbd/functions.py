@@ -6,6 +6,7 @@ import numpy as np
 import random
 from pprint import pprint
 from deap import base, creator, tools
+import copy
 
 
 def createNewDic(dic, multiplyby):
