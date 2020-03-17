@@ -210,6 +210,8 @@ def minmaxdic(force_atom_range={}, *datas):
 
 def getCompounds(atomsLst, referenceAtom, forbiddenAtoms=[], forceAtomAdd=[]):
 
+    global forbidden_compounds
+
     compounds = set([
         'SiO2', 'Al2O3', 'B2O3', 'BaO', 'BeO', 'Bi2O3', 'CaO', 'CdO', 'CeO2',
         'Ce2O3', 'Cs2O', 'GeO2', 'HfO2', 'K2O', 'La2O3', 'Li2O', 'MgO', 'Na2O',
@@ -307,6 +309,10 @@ def distance_individualInsideDomain(individual):
 
 
 def sufficientNumberOfFormers(individual):
+
+    global formers
+    global MINFRACTIONOFFORMERS
+
     sumOfFormers = 0
     compDic = dict(zip(compoundList, individual))
     sumOfCompounds = sum(compDic.values())
@@ -327,6 +333,11 @@ def sufficientNumberOfFormers(individual):
 
 
 def distance_sufficientNumberOfFormers(individual):
+
+    global formers
+    global MINFRACTIONOFFORMERS
+    global compoundList
+
     sumOfFormers = 0
     compDic = dict(zip(compoundList, individual))
     sumOfCompounds = sum(compDic.values())
@@ -345,10 +356,19 @@ def distance_sufficientNumberOfFormers(individual):
 
 def evaluateIndividual(individual):
 
+    global compoundList
+    global model_result
+    global prop1
+    global prop2
+    global weight1
+    global weight2
+    global desiredValue1
+    global desiredValue2
+
     atomsDic = individual2atomF(individual, compoundList)
 
-    value1 = model_results[prop1]['evalfun_dic'](atomdsDic)[0][0]
-    value2 = model_results[prop2]['evalfun_dic'](atomdsDic)[0][0]
+    value1 = model_results[prop1]['evalfun_dic'](atomsDic)[0][0]
+    value2 = model_results[prop2]['evalfun_dic'](atomsDic)[0][0]
 
     scoreValue = score(value1, value2, desiredValue1, desiredValue2, weight1,
                        weight2)
