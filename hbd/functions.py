@@ -176,14 +176,6 @@ def loadmodel(
 
 ### GA final
 
-model_results = {key: loadmodel(**models[key]) for key in models}
-
-dic1 = model_results[prop1]
-dic2 = model_results[prop2]
-
-data1 = pd.DataFrame(dic1['X'], columns=dic1['X_features'])
-data2 = pd.DataFrame(dic2['X'], columns=dic2['X_features'])
-
 
 def getAtoms(*data):
     data = list(data)
@@ -214,9 +206,6 @@ def minmaxdic(force_atom_range={}, *datas):
             minAtom, maxAtom = getMinMaxAtom(atom, *datas)
         result[atom] = (minAtom, maxAtom)
     return result
-
-
-minmaxdictionary = minmaxdic(force_atom_range, data1, data2)
 
 
 def getCompounds(atomsLst, referenceAtom, forbiddenAtoms=[], forceAtomAdd=[]):
@@ -265,14 +254,6 @@ def getCompounds(atomsLst, referenceAtom, forbiddenAtoms=[], forceAtomAdd=[]):
     finallist = sorted(list(set(finalcomps) | atomset | forceadd))
 
     return finallist
-
-
-referenceAtom = 'O'
-
-compoundList = getCompounds(list(minmaxdictionary.keys()), referenceAtom,
-                            forbidden_atoms, forceAtomAdd)
-
-GENSIZE = len(compoundList)  # number of genes in one individual
 
 
 def score(value1, value2, desiredValue1, desiredValue2, weight1, weight2):
