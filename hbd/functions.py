@@ -210,7 +210,7 @@ def minmaxdic(force_atom_range={}, *datas):
 
 def getCompounds(atomsLst, referenceAtom, forbiddenAtoms=[], forceAtomAdd=[]):
 
-    global forbidden_compounds
+    # global forbidden_compounds
 
     compounds = set([
         'SiO2', 'Al2O3', 'B2O3', 'BaO', 'BeO', 'Bi2O3', 'CaO', 'CdO', 'CeO2',
@@ -310,8 +310,8 @@ def distance_individualInsideDomain(individual):
 
 def sufficientNumberOfFormers(individual):
 
-    global formers
-    global MINFRACTIONOFFORMERS
+    # global formers
+    # global MINFRACTIONOFFORMERS
 
     sumOfFormers = 0
     compDic = dict(zip(compoundList, individual))
@@ -334,9 +334,9 @@ def sufficientNumberOfFormers(individual):
 
 def distance_sufficientNumberOfFormers(individual):
 
-    global formers
-    global MINFRACTIONOFFORMERS
-    global compoundList
+    # global formers
+    # global MINFRACTIONOFFORMERS
+    # global compoundList
 
     sumOfFormers = 0
     compDic = dict(zip(compoundList, individual))
@@ -356,14 +356,14 @@ def distance_sufficientNumberOfFormers(individual):
 
 def evaluateIndividual(individual):
 
-    global compoundList
-    global model_result
-    global prop1
-    global prop2
-    global weight1
-    global weight2
-    global desiredValue1
-    global desiredValue2
+    # global compoundList
+    # global model_result
+    # global prop1
+    # global prop2
+    # global weight1
+    # global weight2
+    # global desiredValue1
+    # global desiredValue2
 
     atomsDic = individual2atomF(individual, compoundList)
 
