@@ -138,7 +138,7 @@ def loadmodel(
             return y
 
         else:
-            return np.nan
+            return [[np.nan]]
 
     def evalfun_compounddf(df):
         atomdf = compoundDF2atomsDF(df, sumtotal=1)
