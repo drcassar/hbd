@@ -442,6 +442,7 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
             for prop in possible_properties:
                 pred = model_results[prop]['evalfun_dic'](atomsDic)[0][0]
                 print(f'{prop} = {pred}')
+            print()
 
         # Select the next generation individuals
         offspring = toolbox.select(pop, k=len(pop))
