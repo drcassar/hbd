@@ -138,7 +138,7 @@ def loadmodel(
             return y
 
         else:
-            raise ValueError('Some chemicals are not in the training domain')
+            return np.nan
 
     def evalfun_compounddf(df):
         atomdf = compoundDF2atomsDF(df, sumtotal=1)
@@ -356,15 +356,6 @@ def distance_sufficientNumberOfFormers(individual):
 
 def evaluateIndividual(individual):
 
-    # global compoundList
-    # global model_result
-    # global prop1
-    # global prop2
-    # global weight1
-    # global weight2
-    # global desiredValue1
-    # global desiredValue2
-
     atomsDic = individual2atomF(individual, compoundList)
 
     value1 = model_results[prop1]['evalfun_dic'](atomsDic)[0][0]
@@ -447,6 +438,10 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
             print()
             pprint(compDic)
             print()
+
+            for prop in possible_properties:
+                pred = model_results[prop]['evalfun_dic'](atomsDic)[0][0]
+                print(f'{prop} = {pred}')
 
         # Select the next generation individuals
         offspring = toolbox.select(pop, k=len(pop))
