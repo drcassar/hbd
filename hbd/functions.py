@@ -388,7 +388,7 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
             .format(g, best_ind.fitness.values[0], value1, value2))
 
         if g % 50 == 0:
-            compDic = dict(zip(compoundList, best_ind))
+            compDic = {c:v for c,v in zip(compoundList, best_ind) if v > 0}
             pprint(atomsDic)
             print()
             pprint(compDic)
