@@ -102,13 +102,15 @@ def loadmodel(
     return model_dic
 
 
-def predictIndividual(individual, evalfun_x, X_features, compoundList):
-    atomsDic = individual2atomF(individual, compoundList)
+def predictIndividual(atomsDic, evalfun_x, X_features):
     X = []
-    for feat in X_features:
-        X.append(atomsDic.get(feat,0))
+    if set(atomsDic.keys()).issubset(set(X_features)):
+        for feat in X_features:
+            X.append(atomsDic.get(feat,0))
 
-    return evalfun_x([X])[0][0]
+        return evalfun_x([X])[0][0]
+    else:
+        return np.nan
 
  
 ### GA final
@@ -296,16 +298,14 @@ def evaluateIndividual(individual):
     atomsDic = individual2atomF(individual, compoundList)
 
     value1 = predictIndividual(
-        individual,
+        atomsDic,
         model_results[prop1]['evalfun_x'],
         model_results[prop1]['X_features'],
-        compoundList,
     )
     value2 = predictIndividual(
-        individual,
+        atomsDic,
         model_results[prop2]['evalfun_x'],
         model_results[prop2]['X_features'],
-        compoundList,
     )
 
     scoreValue = score(value1, value2, desiredValue1, desiredValue2, weight1,
@@ -370,26 +370,24 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
     for g in range(GENERATIONS):
 
         best_ind = tools.selBest(pop, 1)[0]
+        atomsDic = individual2atomF(best_ind, compoundList)
 
         value1 = predictIndividual(
-            best_ind,
+            atomsDic,
             model_results[prop1]['evalfun_x'],
             model_results[prop1]['X_features'],
-            compoundList,
         )
         value2 = predictIndividual(
-            best_ind,
+            atomsDic,
             model_results[prop2]['evalfun_x'],
             model_results[prop2]['X_features'],
-            compoundList,
         )
 
         print(
             'Starting generation {}. Current best is {:.3f}. value1 = {:.3f}, value2 = {:.3f}'
             .format(g, best_ind.fitness.values[0], value1, value2))
 
-        if g % 100 == 0:
-            atomsDic = individual2atomF(best_ind, compoundList)
+        if g % 50 == 0:
             compDic = dict(zip(compoundList, best_ind))
             pprint(atomsDic)
             print()
@@ -397,10 +395,9 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
             print()
             for prop in possible_properties:
                 pred = predictIndividual(
-                    best_ind,
+                    atomsDic,
                     model_results[prop]['evalfun_x'],
                     model_results[prop]['X_features'],
-                    compoundList,
                 )
                 print(f'{prop} = {pred}')
             print()
