@@ -9,14 +9,6 @@ from deap import base, creator, tools
 import copy
 
 
-def createNewDic(dic, multiplyby):
-    values = list(dic.values())
-    keys = dic.keys()
-    newValues = np.array(values) * multiplyby
-    newDic = dict(zip(keys, newValues))
-    return newDic
-
-
 ### Chemistry
 
 
@@ -44,45 +36,13 @@ def compound2atoms(compounds):
     return dic
 
 
-def atoms2atomsF(atoms):
-    multiplyby = 1 / np.sum(list(atoms.values()))
-    atomsF = createNewDic(atoms, multiplyby)
-    return atomsF
-
-
 def individual2atomF(individual, compoundList):
     compoundDic = dict(zip(compoundList, individual))
     atomsDic = compound2atoms(compoundDic)
-    atomsFractionDic = atoms2atomsF(atomsDic)
-    return atomsFractionDic
+    multiplyby = 1 / sum(atomsDic.values())
+    atomsDic = {k:v*multiplyby for k,v in atomsDic.items()}
+    return atomsDic
 
-
-def compoundDF2atomsDF(df_, sumtotal=100):
-
-    df = copy.deepcopy(df_)
-    allatoms = set([])
-    compounds = df.columns.values
-
-    for compound in compounds:
-
-        atoms = composition2atoms(compound)
-        values = df[compound]
-
-        for key in atoms:
-            allatoms = allatoms | set([key])
-
-            if key not in df.columns:
-                df[key] = np.zeros(len(df))
-            df[key] = df[key].values + atoms[key] * df[compound].values
-
-    df = df.reindex(list(sorted(allatoms)), axis='columns')
-
-    # Sum of components must be = somtotal
-    soma = df.sum(axis=1)
-    df = df.divide(soma, axis=0)
-    df = df.multiply(sumtotal, axis=0)
-
-    return df
 
 
 ### Load model
@@ -127,41 +87,9 @@ def loadmodel(
         y = y_scaler.inverse_transform(y_scaled)
         return y
 
-    def evalfun_atomdf(df):
-
-        atoms = set(df.columns)
-        trained_atoms = set(X_features)
-
-        if atoms.issubset(trained_atoms):
-            x = df.reindex(X_features, axis='columns', fill_value=0).values
-            y = evalfun_x(x)
-            return y
-
-        else:
-            return [[np.nan]]
-
-    def evalfun_compounddf(df):
-        atomdf = compoundDF2atomsDF(df, sumtotal=1)
-        y = evalfun_atomdf(atomdf)
-        return y
-
-    def evalfun_dic(dic):
-        try:
-            compdf = pd.DataFrame(dic)
-        except ValueError:
-            dic_ = {a: [b] for a, b in zip(dic.keys(), dic.values())}
-            compdf = pd.DataFrame(dic_)
-
-        atomdf = compoundDF2atomsDF(compdf, sumtotal=1)
-        y = evalfun_atomdf(atomdf)
-        return y
-
     model_dic = {
         'model': model,
         'evalfun_x': evalfun_x,
-        'evalfun_atomdf': evalfun_atomdf,
-        'evalfun_compounddf': evalfun_compounddf,
-        'evalfun_dic': evalfun_dic,
         'X': X,
         'y': y,
         'X_features': X_features,
@@ -174,6 +102,15 @@ def loadmodel(
     return model_dic
 
 
+def predictIndividual(individual, evalfun_x, X_features, compoundList):
+    atomsDic = individual2atomF(individual, compoundList)
+    X = []
+    for feat in X_features:
+        X.append(atomsDic.get(feat,0))
+
+    return evalfun_x([X])[0][0]
+
+ 
 ### GA final
 
 
@@ -358,8 +295,18 @@ def evaluateIndividual(individual):
 
     atomsDic = individual2atomF(individual, compoundList)
 
-    value1 = model_results[prop1]['evalfun_dic'](atomsDic)[0][0]
-    value2 = model_results[prop2]['evalfun_dic'](atomsDic)[0][0]
+    value1 = predictIndividual(
+        individual,
+        model_results[prop1]['evalfun_x'],
+        model_results[prop1]['X_features'],
+        compoundList,
+    )
+    value2 = predictIndividual(
+        individual,
+        model_results[prop2]['evalfun_x'],
+        model_results[prop2]['X_features'],
+        compoundList,
+    )
 
     scoreValue = score(value1, value2, desiredValue1, desiredValue2, weight1,
                        weight2)
@@ -423,10 +370,19 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
     for g in range(GENERATIONS):
 
         best_ind = tools.selBest(pop, 1)[0]
-        atomsDic = individual2atomF(best_ind, compoundList)
 
-        value1 = model_results[prop1]['evalfun_dic'](atomsDic)[0][0]
-        value2 = model_results[prop2]['evalfun_dic'](atomsDic)[0][0]
+        value1 = predictIndividual(
+            best_ind,
+            model_results[prop1]['evalfun_x'],
+            model_results[prop1]['X_features'],
+            compoundList,
+        )
+        value2 = predictIndividual(
+            best_ind,
+            model_results[prop2]['evalfun_x'],
+            model_results[prop2]['X_features'],
+            compoundList,
+        )
 
         print(
             'Starting generation {}. Current best is {:.3f}. value1 = {:.3f}, value2 = {:.3f}'
@@ -476,3 +432,7 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
         #     pickle.dump(popresult, open(resultpath, "wb"), protocol=-1)
 
     return pop
+
+
+
+
