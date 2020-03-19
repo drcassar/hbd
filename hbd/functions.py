@@ -40,7 +40,7 @@ def individual2atomF(individual, compoundList):
     compoundDic = dict(zip(compoundList, individual))
     atomsDic = compound2atoms(compoundDic)
     multiplyby = 1 / sum(atomsDic.values())
-    atomsDic = {k:v*multiplyby for k,v in atomsDic.items()}
+    atomsDic = {k:v*multiplyby for k,v in atomsDic.items() if v > 0}
     return atomsDic
 
 
@@ -102,9 +102,9 @@ def loadmodel(
     return model_dic
 
 
-def predictIndividual(atomsDic, evalfun_x, X_features):
+def predictIndividual(nonzeroAtomsDic, evalfun_x, X_features):
     X = []
-    if set(atomsDic.keys()).issubset(set(X_features)):
+    if set(nonzeroAtomDic.keys()).issubset(set(X_features)):
         for feat in X_features:
             X.append(atomsDic.get(feat,0))
 
