@@ -104,7 +104,7 @@ def loadmodel(
 
 def predictIndividual(nonzeroAtomsDic, evalfun_x, X_features):
     X = []
-    if set(nonzeroAtomDic.keys()).issubset(set(X_features)):
+    if set(nonzeroAtomsDic.keys()).issubset(set(X_features)):
         for feat in X_features:
             X.append(atomsDic.get(feat,0))
 
