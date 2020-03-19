@@ -106,7 +106,7 @@ def predictIndividual(nonzeroAtomsDic, evalfun_x, X_features):
     X = []
     if set(nonzeroAtomsDic.keys()).issubset(set(X_features)):
         for feat in X_features:
-            X.append(atomsDic.get(feat,0))
+            X.append(nonzeroAtomsDic.get(feat,0))
 
         return evalfun_x([X])[0][0]
     else:
