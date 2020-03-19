@@ -389,14 +389,19 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
             .format(g, best_ind.fitness.values[0], value1, value2))
 
         if g % 100 == 0:
-            pprint(atomsDic)
+            atomsDic = individual2atomF(best_ind, compoundList)
             compDic = dict(zip(compoundList, best_ind))
+            pprint(atomsDic)
             print()
             pprint(compDic)
             print()
-
             for prop in possible_properties:
-                pred = model_results[prop]['evalfun_dic'](atomsDic)[0][0]
+                pred = predictIndividual(
+                    best_ind,
+                    model_results[prop]['evalfun_x'],
+                    model_results[prop]['X_features'],
+                    compoundList,
+                )
                 print(f'{prop} = {pred}')
             print()
 
