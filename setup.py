@@ -2,12 +2,13 @@ import setuptools
 
 setuptools.setup(
     name='hbd',
-    version='1.6.6',
+    version='1.6.7',
     author='Daniel Roberto Cassar',
     author_email='daniel.r.cassar@gmail.com',
     description='hbd',
     url="https://github.com/drcassar/hbd",
     packages=setuptools.find_packages(),
-    install_requires=['numpy>=1.1', 'pandas>=0.24.0', 'deap', 'tensorflow'],
+    install_requires=['numpy>=1.1', 'pandas>=0.24.0', 'deap', 'tensorflow',
+                      'mendeleev'],
     python_requires='>=3.6',
 )

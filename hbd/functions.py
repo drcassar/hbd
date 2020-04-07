@@ -7,9 +7,19 @@ import random
 from pprint import pprint
 from deap import base, creator, tools
 import copy
+from mendeleev import element
 
 
 ### Chemistry
+
+def molarMass(atoms):
+    '''Compute the molar mass of a atom dictionary. Returns in kg/mol'''
+
+    molmass = 0
+    for a in atoms:
+        el = element(a)
+        molmass += el.atomic_weight*atoms[a]
+    return molmass/1000 # kg/mol
 
 
 def composition2atoms(cstr):
@@ -42,6 +52,17 @@ def individual2atomF(individual, compoundList):
     multiplyby = 1 / sum(atomsDic.values())
     atomsDic = {k:v*multiplyby for k,v in atomsDic.items() if v > 0}
     return atomsDic
+
+
+def compound2weighF(compound):
+    dic = {}
+    for composition in compound.keys():
+        atoms = composition2atoms(composition)
+        molmass = molarMass(atoms)
+        dic[composition] = compound[composition] * molmass
+    multiplyby = 1 / np.sum(list(dic.values()))
+    weightP = {k:v*multiplyby for k,v in dic.items() if v > 0}
+    return weighP
 
 
 
@@ -335,7 +356,7 @@ def createToolbox(MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY, TOURNMENTSIZE,
 
 def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
          TOURNMENTSIZE, GENECROSSOVERPROB, GENEMUTPROB, GENERATIONS,
-         CROSSOVERPROB, MUTPROB, model_results, prop1, prop2):
+         CROSSOVERPROB, MUTPROB, model_results, prop1, prop2, costdic1kg={}):
 
     toolbox = createToolbox(MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
                             TOURNMENTSIZE, GENECROSSOVERPROB, GENEMUTPROB)
@@ -371,9 +392,16 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
 
         if g % 50 == 0:
             compDic = {c:v for c,v in zip(compoundList, best_ind) if v > 0}
+            weighDic = compound2weighF(compDic)
+
+            price1kg = sum([weighDic[c]*costdic1kg.get(c,np.nan) for c in
+                            weighDic.keys()])
+
             pprint(atomsDic)
             print()
             pprint(compDic)
+            print()
+            print(f'Price of 1 kg: {price1kg}')
             print()
             for prop in possible_properties:
                 pred = predictIndividual(
