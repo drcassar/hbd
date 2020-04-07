@@ -147,28 +147,10 @@ def minmaxdic(force_atom_range={}, *datas):
     return result
 
 
-def getCompounds(atomsLst, referenceAtom, forbiddenAtoms=[], forceAtomAdd=[]):
+def getCompounds(atomsLst, referenceAtom, compounds, forbiddenAtoms=[],
+                 forceAtomAdd=[]):
 
     # global forbidden_compounds
-
-    compounds = set([
-        'SiO2', 'Al2O3', 'B2O3', 'BaO', 'BeO', 'Bi2O3', 'CaO', 'CdO', 'CeO2',
-        'Ce2O3', 'Cs2O', 'GeO2', 'HfO2', 'K2O', 'La2O3', 'Li2O', 'MgO', 'Na2O',
-        'Nb2O5', 'Nd2O3', 'P2O5', 'PbO', 'Rb2O', 'Sm2O3', 'SnO', 'SrO',
-        'Ta2O5', 'TiO2', 'Tl2O', 'V2O5', 'ZnO', 'Ag2O', 'Dy2O3', 'Er2O3',
-        'Eu2O3', 'Gd2O3', 'Ga2O3', 'H2O', 'Fe2O3', 'R2O', 'RO', 'R2O3', 'RO2',
-        'R2O5', 'Sc2O3', 'Y2O3', 'In2O3', 'SO3', 'Cu2O', 'WO3', 'NiO', 'MoO3',
-        'Cr2O3', 'VO2', 'ThO2', 'Mn2O3', 'MnO2', 'As2O5', 'CoO', 'Sb2O3',
-        'CuO', 'TeO2', 'SnO2', 'SO2', 'UO2', 'UO3', 'Fe3O4', 'CrO3', 'FeO',
-        'MnO', 'Pr2O3', 'Tb2O3', 'Ho2O3', 'Yb2O3', 'Sb2O5', 'Co3O4', 'RO3',
-        'As2O3', 'Mn3O4', 'Ni2O3', 'Mo2O3', 'Co2O3', 'NH4NO3', 'U2O5', 'OH',
-        'TeO3', 'Pr6O11', 'Lu2O3', 'PrO2', 'TbO2', 'SeO2', 'Mn2O7', 'MoO',
-        'P2O3', 'SrF2', 'CrF3', 'U3O8', 'Tl2O3', 'NO2', 'SbO2', 'Pb3O4',
-        'PbO2', 'SiO', 'Sn2O3', 'GeO', 'N2O5', 'Ti2O3', 'Tm2O3', 'HgO',
-        'Nb2O3', 'Au2O', 'PtO2', 'Re2O7', 'RuO2', 'EuO', 'Ta2O3', 'V2O3',
-        'Tb3O7', 'Tb4O7', 'SeO3', 'Re2O3', 'VO6', 'MoO2', 'Mo2O5', 'Cr3O4',
-        'Hg2O', 'AmO2', 'NpO2', 'PuO2', 'ZrO2', 'PdO', 'TiO', 'PtO'
-    ])
 
     forceadd = set(forceAtomAdd)
 
