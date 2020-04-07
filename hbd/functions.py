@@ -62,7 +62,7 @@ def compound2weighF(compound):
         dic[composition] = compound[composition] * molmass
     multiplyby = 1 / np.sum(list(dic.values()))
     weightP = {k:v*multiplyby for k,v in dic.items() if v > 0}
-    return weighP
+    return weightP
 
 
 
@@ -392,10 +392,10 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
 
         if g % 50 == 0:
             compDic = {c:v for c,v in zip(compoundList, best_ind) if v > 0}
-            weighDic = compound2weighF(compDic)
+            weightDic = compound2weighF(compDic)
 
-            price1kg = sum([weighDic[c]*costdic1kg.get(c,np.nan) for c in
-                            weighDic.keys()])
+            price1kg = sum([weightDic[c]*costdic1kg.get(c,np.nan) for c in
+                            weightDic.keys()])
 
             pprint(atomsDic)
             print()
