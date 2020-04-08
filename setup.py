@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='hbd',
-    version='1.6.7',
+    version='1.6.8',
     author='Daniel Roberto Cassar',
     author_email='daniel.r.cassar@gmail.com',
     description='hbd',
