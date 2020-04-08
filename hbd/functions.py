@@ -409,24 +409,26 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
             compDic = {c:v for c,v in zip(compoundList, best_ind) if v > 0}
             weightDic = compound2weighF(compDic)
 
-            multi_by = 1 / sum(best_ind)
+            multi_by = 100 / sum(best_ind)
             compDic_norm = {c:v*multi_by for c,v in zip(compoundList, best_ind) if v > 0}
 
             price1kg = sum([weightDic[c]*costdic1kg.get(c,np.nan) for c in
                             weightDic.keys()])
 
+            weightDic_grams = {c:v*grams_of_glass_to_make for c,v in weightDic.items()}
+
             # pprint(atomsDic)
             print()
-            print('Compounds in mol')
+            print('Compounds in mol (using only integers)')
             pprint(compDic)
             print()
-            print('Compounds in mol (normalized, sum = 1 mol)')
+            print('Compounds in %mol (total = 100%)')
             pprint(compDic_norm)
             print()
-            print('Compounds in weight (in kg, to make 1 kg of glass)')
-            pprint(weightDic)
+            print(f'Compounds in weight (in grams, to make {grams_of_glass_to_make} of glass) [BETA: please check!]')
+            pprint(weightDic_grams)
             print()
-            print(f'Price of 1 kg: {price1kg}')
+            print(f'Price of 1 kg of glass: {price1kg}')
             print()
             for prop in possible_properties:
                 pred = predictIndividual(
