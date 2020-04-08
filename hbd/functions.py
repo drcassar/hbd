@@ -405,16 +405,26 @@ def main(POPULATION, MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY,
             'Starting generation {}. Current best is {:.3f}. value1 = {:.3f}, value2 = {:.3f}'
             .format(g, best_ind.fitness.values[0], value1, value2))
 
-        if g % 50 == 0:
+        if g % print_results_every_n_generations == 0:
             compDic = {c:v for c,v in zip(compoundList, best_ind) if v > 0}
             weightDic = compound2weighF(compDic)
+
+            multi_by = 1 / sum(best_ind)
+            compDic_norm = {c:v*multi_by for c,v in zip(compoundList, best_ind) if v > 0}
 
             price1kg = sum([weightDic[c]*costdic1kg.get(c,np.nan) for c in
                             weightDic.keys()])
 
-            pprint(atomsDic)
+            # pprint(atomsDic)
             print()
+            print('Compounds in mol')
             pprint(compDic)
+            print()
+            print('Compounds in mol (normalized, sum = 1 mol)')
+            pprint(compDic_norm)
+            print()
+            print('Compounds in weight (in kg, to make 1 kg of glass)')
+            pprint(weightDic)
             print()
             print(f'Price of 1 kg: {price1kg}')
             print()
