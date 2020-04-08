@@ -213,36 +213,51 @@ def score(value1, value2, desiredValue1, desiredValue2, weight1, weight2):
 
 def individualInsideDomain(individual):
     atomsF = individual2atomF(individual, compoundList)
-
     for a in atomsF:
         constrain = minmaxdictionary.get(a, (0, 0))
-
         min_fraction = constrain[0] * ((100 - relax) / 100)
         max_fraction = constrain[1] * ((100 + relax) / 100)
 
         if not min_fraction <= atomsF[a] <= max_fraction:
             return False
 
+    if len(force_compound_range) > 0:
+        multiplication_factor = 1 / sum(individual)
+        compDic = {c:v*multiplication_factor for c,v in zip(compoundList, individual)}
+        for c in force_compound_range:
+            min_fraction = force_compound_range[c][0]
+            max_fraction = force_compound_range[c][1]
+            if not min_fraction <= compDic[c] <= max_fraction:
+                return False
+
     return True
 
 
 def distance_individualInsideDomain(individual):
-    atomsF = individual2atomF(individual, compoundList)
-
     distance = 0
 
+    atomsF = individual2atomF(individual, compoundList)
     for a in atomsF:
         constrain = minmaxdictionary.get(a, (0, 0))
-
         min_fraction = constrain[0] * ((100 - relax) / 100)
         max_fraction = constrain[1] * ((100 + relax) / 100)
-
         if not min_fraction <= atomsF[a] <= max_fraction:
             if atomsF[a] < min_fraction:
                 distance += abs(atomsF[a] - min_fraction)
-
             else:
                 distance += abs(atomsF[a] - max_fraction)
+
+    if len(force_compound_range) > 0:
+        multiplication_factor = 1 / sum(individual)
+        compDic = {c:v*multiplication_factor for c,v in zip(compoundList, individual)}
+        for c in force_compound_range:
+            min_fraction = force_compound_range[c][0]
+            max_fraction = force_compound_range[c][1]
+            if not min_fraction <= compDic[c] <= max_fraction:
+                if compDic[c] < min_fraction:
+                    distance += abs(compDic[c] - min_fraction)
+                else:
+                    distance += abs(compDic[c] - max_fraction)
 
     if distance < 1:
         return (1 / distance)**2
