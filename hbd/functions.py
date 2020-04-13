@@ -311,13 +311,14 @@ def distance_sufficientNumberOfFormers(individual):
         distance = abs(former_percentage - MINFRACTIONOFFORMERS * 100)
 
         print('Distance Former: ', distance)
-        if distance < 1:
-            return (1 / distance)**2 + (1/distance)*100
-        else:
-            return distance**2 + distance*100
+        return distance*10000 + distance**2
+        # if distance < 1:
+        #     return (1 / distance)**2 + (1/distance)*100
+        # else:
+        #     return distance**2 + distance*100
 
     else:
-        return 1000
+        return 1000000000
 
 
 def evaluateIndividual(individual):
