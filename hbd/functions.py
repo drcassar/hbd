@@ -10,28 +10,6 @@ import copy
 from mendeleev import element
 
 
-### Test
-
-def master_atom_lst(compound_lst):
-    atom_lst = []
-    for key in compounds_lst:
-        atoms = composition2atoms(key)
-        atom_lst.append(atoms)
-    return atom_lst
-
-
-def individual2atomF(individual, compoundList):
-
-    atom_dic = {}
-    for baseValue, dic in zip(individual, atom_lst):
-        for at in dic:
-            atom_dic[at] = atom_dic.get(at, 0) + dic[at] * baseValue
-
-    multiplyby = 1 / sum(atom_dic.values())
-    atomsDic = {k:v*multiplyby for k,v in atom_dic.items()}
-    return atomsDic
-
-
 ### Chemistry
 
 def molarMass(atoms):
@@ -86,6 +64,25 @@ def compound2weighF(compound):
     weightP = {k:v*multiplyby for k,v in dic.items() if v > 0}
     return weightP
 
+
+def master_atom_lst(compound_lst):
+    atom_lst = []
+    for key in compound_lst:
+        atoms = composition2atoms(key)
+        atom_lst.append(atoms)
+    return atom_lst
+
+
+def individual2atomF(individual, compoundList):
+
+    atom_dic = {}
+    for baseValue, dic in zip(individual, atom_lst):
+        for at in dic:
+            atom_dic[at] = atom_dic.get(at, 0) + dic[at] * baseValue
+
+    multiplyby = 1 / sum(atom_dic.values())
+    atomsDic = {k:v*multiplyby for k,v in atom_dic.items()}
+    return atomsDic
 
 
 ### Load model
