@@ -20,9 +20,7 @@ def master_atom_lst(compound_lst):
     return atom_lst
 
 
-atom_lst = master_atom_lst(compoundList)
-
-def individual2atomF(individual, compoundList, atom_lst=atom_lst):
+def individual2atomF(individual, compoundList):
 
     atom_dic = {}
     for baseValue, dic in zip(individual, atom_lst):
