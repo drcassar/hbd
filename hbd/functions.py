@@ -134,8 +134,8 @@ def predictIndividual(nonzeroAtomsDic, evalfun_x, X_features):
         return np.nan
 
  
-### GA final
 
+### Comosition
 
 def getAtoms(*data):
     data = list(data)
@@ -200,6 +200,9 @@ def getCompounds(atomsLst, referenceAtom, compounds, forbiddenAtoms=[],
     return finallist
 
 
+
+### Score
+
 def score(value1, value2, desiredValue1, desiredValue2, weight1, weight2):
     '''Quanto menor este score, melhor'''
 
@@ -259,10 +262,11 @@ def distance_individualInsideDomain(individual):
                 else:
                     distance += abs(compDic[c] - max_fraction)
 
+    print('Distance domain: ', distance)
     if distance < 1:
-        return (1 / distance)**2
+        return (1 / distance)**2 + (1/distance)*100
     else:
-        return distance**2
+        return distance**2 + distance*100
 
 
 def sufficientNumberOfFormers(individual):
@@ -305,7 +309,8 @@ def distance_sufficientNumberOfFormers(individual):
     if sumOfCompounds > 0:
         former_percentage = sumOfFormers / sumOfCompounds * 100
         distance = abs(former_percentage - MINFRACTIONOFFORMERS * 100)
-        return distance**2
+        print('Distance Former: ', distance)
+        return distance**2 + distance*100
 
     else:
         return 1000
@@ -331,6 +336,9 @@ def evaluateIndividual(individual):
 
     return scoreValue,
 
+
+
+### Final
 
 def createToolbox(MINCOMP, MAXCOMP, GENSIZE, CONSTRAINTPENALTY, TOURNMENTSIZE,
                   GENECROSSOVERPROB, GENEMUTPROB):
