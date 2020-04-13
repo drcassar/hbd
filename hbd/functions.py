@@ -309,8 +309,12 @@ def distance_sufficientNumberOfFormers(individual):
     if sumOfCompounds > 0:
         former_percentage = sumOfFormers / sumOfCompounds * 100
         distance = abs(former_percentage - MINFRACTIONOFFORMERS * 100)
+
         print('Distance Former: ', distance)
-        return distance**2 + distance*100
+        if distance < 1:
+            return (1 / distance)**2 + (1/distance)*100
+        else:
+            return distance**2 + distance*100
 
     else:
         return 1000
