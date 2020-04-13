@@ -262,7 +262,6 @@ def distance_individualInsideDomain(individual):
                 else:
                     distance += abs(compDic[c] - max_fraction)
 
-    print('Distance domain: ', distance)
     if distance < 1:
         return (1 / distance)**2 + (1/distance)*100
     else:
@@ -310,7 +309,6 @@ def distance_sufficientNumberOfFormers(individual):
         former_percentage = sumOfFormers / sumOfCompounds * 100
         distance = abs(former_percentage - MINFRACTIONOFFORMERS * 100)
 
-        print('Distance Former: ', distance)
         return distance*10000 + distance**2
         # if distance < 1:
         #     return (1 / distance)**2 + (1/distance)*100
